@@ -1,5 +1,5 @@
 # Stage 1: Install dependencies and Chromium
-FROM node:22-bookworm-slim AS builder
+FROM node:25-bookworm-slim AS builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN npx playwright install --with-deps chromium
 
 
 # Stage 2: Runtime image
-FROM node:22-bookworm-slim
+FROM node:25-bookworm-slim
 
 # Create non-root user with explicit UID for K8s PSA compatibility.
 RUN groupadd -r -g 10001 mcp && useradd -r -u 10001 -g mcp -d /home/mcp -s /sbin/nologin -m mcp
