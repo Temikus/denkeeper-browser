@@ -1,0 +1,9 @@
+.git
+.github
+test/
+justfile
+README.md
+LICENSE
+CLAUDE.md
+*.md
+node_modules/

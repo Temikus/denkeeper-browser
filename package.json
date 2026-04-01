@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "denkeeper-browser",
+  "version": "0.0.1",
+  "description": "Hardened Playwright MCP server for denkeeper browser automation",
+  "dependencies": {
+    "@playwright/mcp": "0.0.70"
+  }
+}

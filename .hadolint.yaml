@@ -1,0 +1,3 @@
+ignored:
+  # Multiple consecutive RUNs in builder stage are intentional for layer caching.
+  - DL3059
