@@ -13,6 +13,10 @@ updates:
       interval: "weekly"
     reviewers:
       - "Temikus"
+    ignore:
+      # Only track LTS releases (even-numbered). Ignore non-LTS odd majors.
+      - dependency-name: "node"
+        versions: ["23.x", "25.x", "27.x", "29.x", "31.x"]
 
   - package-ecosystem: "github-actions"
     directory: "/"

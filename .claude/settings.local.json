@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm audit:*)",
+      "Bash(just lint:*)",
+      "Bash(just audit:*)",
+      "Bash(gh api:*)",
+      "Bash(npm ls:*)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:results-receiver.actions.githubusercontent.com)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  }
+}
