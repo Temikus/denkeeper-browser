@@ -100,12 +100,64 @@ run_mcp_session() {
     rm -rf "$tmpdir"
 }
 
+# Same as run_mcp_session but with --read-only + tmpfs + shm-size,
+# matching denkeeper's production runtime conditions.
+run_mcp_session_readonly() {
+    local tmpdir
+    tmpdir="$(mktemp -d)"
+    local fifo_in="$tmpdir/in"
+    local fifo_out="$tmpdir/out"
+    mkfifo "$fifo_in" "$fifo_out"
+
+    docker run --rm -i \
+        --network none \
+        --read-only \
+        --tmpfs /tmp \
+        --tmpfs /home/mcp \
+        --shm-size=256m \
+        "$IMAGE" \
+        --headless --browser chromium --no-sandbox \
+        < "$fifo_in" > "$fifo_out" 2>/dev/null &
+    local pid=$!
+
+    exec 3>"$fifo_in"
+
+    # ── Test: MCP initialize over read-only filesystem ──
+
+    local init_req='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"smoke-test","version":"0.1.0"}}}'
+    echo "$init_req" >&3
+
+    local init_resp
+    if ! init_resp="$($TIMEOUT_CMD "$TIMEOUT_SEC" head -n1 < "$fifo_out")"; then
+        fail "read-only: initialize timed out after ${TIMEOUT_SEC}s"
+        exec 3>&-; kill "$pid" 2>/dev/null; wait "$pid" 2>/dev/null; rm -rf "$tmpdir"
+        return
+    fi
+
+    if echo "$init_resp" | python3 -c "import sys,json; d=json.load(sys.stdin); assert 'result' in d and 'serverInfo' in d['result']" 2>/dev/null; then
+        pass "read-only: initialize succeeded"
+    else
+        fail "read-only: unexpected response: $init_resp"
+    fi
+
+    exec 3>&-
+    kill "$pid" 2>/dev/null
+    wait "$pid" 2>/dev/null || true
+    rm -rf "$tmpdir"
+}
+
 # ── main ─────────────────────────────────────────────────────────────
 
 echo "=== Smoke test: $IMAGE ==="
 echo ""
 
 run_mcp_session
+
+echo ""
+echo "--- Read-only filesystem ---"
+echo ""
+
+run_mcp_session_readonly
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"

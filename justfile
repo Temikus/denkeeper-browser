@@ -42,6 +42,31 @@ check: lint test
 audit:
     npm audit --audit-level=high
 
+# Run security scans: `just scan` runs all, `just scan grype` or `just scan audit` runs one
+scan target="all": build
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case "{{target}}" in
+        all)
+            echo "=== Grype container scan ==="
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock anchore/grype:latest denkeeper-browser --only-fixed --fail-on high
+            echo ""
+            echo "=== npm audit ==="
+            npm audit --audit-level=high
+            ;;
+        grype)
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock anchore/grype:latest denkeeper-browser --only-fixed --fail-on high
+            ;;
+        audit)
+            npm audit --audit-level=high
+            ;;
+        *)
+            echo "Unknown scan target: {{target}}"
+            echo "Usage: just scan [grype|audit|all]"
+            exit 1
+            ;;
+    esac
+
 # Run the image interactively for debugging
 run:
     docker run --rm -it --tmpfs /tmp --tmpfs /home/mcp denkeeper-browser --headless --browser chromium --no-sandbox
