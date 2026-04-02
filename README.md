@@ -116,12 +116,14 @@ gh attestation verify \
 Requires [just](https://github.com/casey/just) and Docker.
 
 ```bash
-just build       # Build for current platform
-just test        # Build + run MCP smoke test
-just lint        # Lint Dockerfile with hadolint
-just check       # Run all checks (lint + test)
-just audit       # Audit npm dependencies for vulnerabilities
-just build-multi # Build for amd64 + arm64 (requires buildx)
+just build          # Build for current platform
+just test           # Build + run all tests (smoke + structure)
+just test smoke     # Run MCP smoke test only
+just test structure # Run container structure tests only
+just lint           # Lint Dockerfile with hadolint
+just check          # Run all checks (lint + tests)
+just audit          # Audit npm dependencies for vulnerabilities
+just build-multi    # Build for amd64 + arm64 (requires buildx)
 ```
 
 ## Version pinning

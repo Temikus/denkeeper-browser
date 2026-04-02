@@ -9,20 +9,34 @@ build:
 build-multi:
     docker buildx build --platform linux/amd64,linux/arm64 -t denkeeper-browser .
 
-# Run the MCP smoke test against the locally built image
-test: build
-    ./test/smoke.sh denkeeper-browser
+# Run tests: `just test` runs all, `just test smoke` or `just test structure` runs one
+test suite="all": build
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case "{{suite}}" in
+        all)
+            ./test/smoke.sh denkeeper-browser
+            ./test/structure.sh denkeeper-browser
+            ;;
+        smoke)
+            ./test/smoke.sh denkeeper-browser
+            ;;
+        structure)
+            ./test/structure.sh denkeeper-browser
+            ;;
+        *)
+            echo "Unknown test suite: {{suite}}"
+            echo "Usage: just test [smoke|structure|all]"
+            exit 1
+            ;;
+    esac
 
 # Lint the Dockerfile with hadolint
 lint:
     docker run --rm -i hadolint/hadolint < Dockerfile
 
-# Run container structure tests against the locally built image
-test-structure: build
-    ./test/structure.sh denkeeper-browser
-
-# Run all checks (lint + test + structure)
-check: lint test test-structure
+# Run all checks (lint + tests)
+check: lint test
 
 # Audit npm dependencies for known vulnerabilities
 audit:
