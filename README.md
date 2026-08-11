@@ -128,7 +128,7 @@ just build-multi    # Build for amd64 + arm64 (requires buildx)
 
 ## Version pinning
 
-The `@playwright/mcp` version is pinned in `package.json`. Image releases track upstream versions. Dependabot opens PRs for version bumps automatically.
+The `@playwright/mcp` version is pinned in `package.json`. Image releases track upstream versions. Renovate opens PRs for version bumps automatically.
 
 ## License
 

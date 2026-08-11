@@ -2,5 +2,33 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "schedule": [
+    "before 6am on monday"
+  ],
+  "reviewers": [
+    "Temikus"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "description": "Node base image: track even-numbered LTS majors only, skip odd non-LTS lines.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "node"
+      ],
+      "allowedVersions": "/^\\d*[02468](\\.|-|$)/"
+    },
+    {
+      "description": "Batch GitHub Actions bumps into one PR to keep the queue short.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "github-actions"
+    }
   ]
 }
