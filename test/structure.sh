@@ -56,6 +56,10 @@ echo ""
 uid="$(drun id -u)"
 assert_eq "runs as UID 10001" "$uid" "10001"
 
+# 1b. USER is numeric — Kubernetes' runAsNonRoot check cannot resolve a username
+configured_user="$(docker inspect --format='{{.Config.User}}' "$IMAGE")"
+assert_eq "image USER is numeric uid:gid" "$configured_user" "10001:10001"
+
 # 2. Entrypoint is node + wrapper server
 entrypoint="$(docker inspect --format='{{json .Config.Entrypoint}}' "$IMAGE")"
 assert_eq "entrypoint is node + wrapper server" "$entrypoint" \

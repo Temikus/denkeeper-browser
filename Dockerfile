@@ -34,7 +34,12 @@ RUN npx --prefix /app playwright install-deps chromium \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/mcp
-USER mcp
+
+# Numeric UID:GID, not the `mcp` name. Kubernetes' runAsNonRoot admission check
+# cannot resolve a username against the image's /etc/passwd, so a named USER
+# makes the pod fail to start under a restricted PodSecurity policy.
+# Also satisfies hadolint DL3066.
+USER 10001:10001
 
 # OCI image labels.
 LABEL org.opencontainers.image.source="https://github.com/Temikus/denkeeper-browser"
