@@ -5,8 +5,8 @@ Hardened Docker image running `@playwright/mcp` for [denkeeper](https://github.c
 ## Architecture
 
 Single-container image, two-stage Dockerfile:
-- **Builder stage**: `node:22-bookworm-slim` — installs npm deps + Chromium via Playwright
-- **Runtime stage**: `node:22-bookworm-slim` — copies node_modules, server.js, and lib/, runs as non-root user `mcp` (UID 10001)
+- **Builder stage**: `node:24-bookworm-slim` — installs npm deps + Chromium via Playwright
+- **Runtime stage**: `node:24-bookworm-slim` — copies node_modules, server.js, and lib/, runs as non-root user `mcp` (UID 10001)
 
 ### MCP Server Wrapper
 
