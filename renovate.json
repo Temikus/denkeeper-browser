@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "Gate Node base image majors behind Dependency Dashboard approval so only LTS lines land. Renovate's LTS-aware 'node' versioning cannot be used here: the image tag carries a '-bookworm-slim' suffix, which npm versioning reads as a pre-release. Minor and patch tag updates still flow automatically.",
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["node"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    }
   ]
 }
