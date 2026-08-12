@@ -55,7 +55,7 @@ See the [`@playwright/mcp` docs](https://github.com/microsoft/playwright-mcp) fo
 ## Security model
 
 The image provides:
-- **Non-root execution** (UID 10001, user `mcp`)
+- **Non-root execution** (numeric `USER 10001:10001`, backed by the `mcp` account — numeric so Kubernetes' `runAsNonRoot` admission check can verify it)
 - **Minimal attack surface** — only Chromium, no Firefox/WebKit
 - **No ambient credentials** — no host browser data mounted
 
