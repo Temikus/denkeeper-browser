@@ -10,6 +10,6 @@
     "@playwright/mcp": "0.0.85"
   },
   "devDependencies": {
-    "jsdom": "^30.0.1"
+    "jsdom": "^31.0.0"
   }
 }
